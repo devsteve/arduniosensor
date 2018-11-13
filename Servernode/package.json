@@ -1,0 +1,11 @@
+{
+  "name": "servernode",
+  "version": "1.0.0",
+  "description": "raspberrypi",
+  "main": "index.js",
+  "dependencies": {
+    "@types/node": "^10.12.3",
+    "@azure/event-hubs": "^1.0.3",
+    "typescript": "^3.2.0-dev.20181107"
+  }
+}

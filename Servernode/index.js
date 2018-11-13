@@ -14,7 +14,7 @@
 //
 // Using the Azure CLI:
 // az iot hub show-connection-string --hub-name {YourIoTHubName} --output table
-var connectionString = '{Your service connection string here}';
+var connectionString = 'HostName=ArdunioSensor.azure-devices.net;DeviceId=ardunio-uno;SharedAccessKey=jfsl923AJ7AMG681fpQ/AejNMFPW2l1PBGW0qnfFFkg=';
 
 // Using the Node.js SDK for Azure Event hubs:
 //   https://github.com/Azure/azure-event-hubs-node
