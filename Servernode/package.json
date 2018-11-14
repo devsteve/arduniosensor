@@ -4,8 +4,9 @@
   "description": "raspberrypi",
   "main": "index.js",
   "dependencies": {
-    "@types/node": "^10.12.3",
     "@azure/event-hubs": "^1.0.3",
+    "@types/node": "^10.12.3",
+    "express": "^4.16.4",
     "typescript": "^3.2.0-dev.20181107"
   }
 }

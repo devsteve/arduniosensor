@@ -15,15 +15,12 @@ import Config = require('../../config/env');
 // The device connection string to authenticate the device with your IoT hub.
 export default class edgeSend {
 
-  send() { 
+  send(dataObject) { 
     // Create a message and send it to the IoT hub every second
     var client = Device.Client.fromConnectionString(Config.env.connectionString, Mqtt.Mqtt);
     // Simulate telemetry.
     let temperature = 20 + (Math.random() * 15);
-    let message = new Device.Message(JSON.stringify({
-      temperature: temperature,
-      humidity: 60 + (Math.random() * 20)
-    }));
+    let message = new Device.Message(JSON.stringify(dataObject));
 
     // Add a custom application property to the message.
     // An IoT hub can filter on these properties without access to the message body.

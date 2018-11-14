@@ -7,14 +7,8 @@ import Config = require('../../config/env');
 
 export default class readHubData {
 
-  constructor() {
-    if(!Config.dev) {
-      
-    }
-  }
-
-
-  printError(err) {
+  
+  private static _printError(err) {
     console.log(err.message);
   }
 
@@ -22,7 +16,7 @@ export default class readHubData {
   // - Telemetry is sent in the message body
   // - The device can add arbitrary application properties to the message
   // - IoT Hub adds system properties, such as Device Id, to the message.
-  printMessage(message) {
+  private static _printMessage(message) {
     console.log('Telemetry received: ');
     console.log(JSON.stringify(message.body));
     console.log('Application properties (set by device): ')
@@ -34,7 +28,7 @@ export default class readHubData {
 
   // Connect to the partitions on the IoT Hub's Event Hubs-compatible endpoint.
   // This example only reads messages sent after this application started.
-  readData() {  
+  public static readData() {  
     var ehClient;
 
     EventHubClient.createFromIotHubConnectionString(Config.env.connectionString).then(function (client) {
@@ -44,8 +38,8 @@ export default class readHubData {
     }).then(function (ids) {
       console.log("The partition ids are: ", ids);
       return ids.map(function (id) {
-        return ehClient.receive(id, printMessage, printError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
+        return ehClient.receive(id, readHubData._printMessage, readHubData._printError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
       });
-    }).catch(printError);
+    }).catch(readHubData._printError);
   }
 }

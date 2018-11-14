@@ -8,11 +8,11 @@ export default abstract class ingressDataHandler implements interfaceProcess {
   /**
    * Extract based on string pattern
    */
-  public getValue = (valueName,datastring) => {
+  public getValue = (valueName,datastring,isInt = false) => {
     let regexString = valueName+this._regex;
     let regex = new RegExp(regexString,"g");
     let found = regex.exec(datastring);
-    return found ? found[1] || null : null;
+    return found && found[1] ? (isInt ? parseInt(found[1]) : found[1]) : null;
   }
 
 }
