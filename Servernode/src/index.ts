@@ -1,18 +1,23 @@
 import readHubData from './services/readHubData';
-import Application from 'express';
+import express = require('express')
+import path = require('path');
 import Config = require('../config/env');
 import displayController from './controllers/displayController';
 //Start the IoT Hub routine
 readHubData.readData();
 
 
-// Create a new express application instance
-const app: Application = express();
 // The port the express app will listen on
-const port: number = Config.env.port || 3000;
+const port: number = Config.env.port || 3030;
+const app = express();
 
-// Mount the WelcomeController at the /welcome route
-app.use('/', displayController());
+
+console.log(path.join(__dirname, '../Client/build'));
+app.use(express.static(path.join(__dirname, '../Client/build')));
+
+//Setup for all API requests
+app.use('/api/', displayController);
+
 
 // Serve the application at the given port
 app.listen(port, () => {
