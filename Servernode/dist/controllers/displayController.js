@@ -6,15 +6,16 @@ const router = express_1.Router();
 // The / here corresponds to the route that the WelcomeController
 // is mounted on in the server.ts file.
 // In this case it's /welcome
-router.get('/', (req, res) => {
-    // Reply with a hello world when no name param is provided
-    res.send('Hello, World!');
+router.get('/all', (req, res) => {
+    // Reply with entire record
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify([{ temp: "5", humidity: "10", time: "10:14" }, { temp: "5", humidity: "10", time: "10:14" }]));
 });
-router.get('/:name', (req, res) => {
-    // Extract the name from the request parameters
-    let { name } = req.params;
-    // Greet the given name
-    res.send(`Hello, ${name}`);
+router.get('/:count', (req, res) => {
+    //Number of records to return
+    const { count } = req.params;
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify({ count: count }));
 });
 // Export the express.Router() instance to be used by server.ts
 exports.default = router;

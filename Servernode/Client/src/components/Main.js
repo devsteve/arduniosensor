@@ -7,13 +7,15 @@ export class Main extends Component {
   constructor(props) {
     super(props);
     this.state = { readings: [], loading: true };
-
-    fetch('api/all')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        this.setState({ readings: data, loading: false });
-      });
+    let $this = this;
+    setInterval(() => { 
+      fetch('api/all')
+        .then(response => response.json())
+        .then(data => {
+          console.log(data);
+          $this.setState({ readings: data, loading: false });
+        });
+      },2000);
   }
 
   static renderReadingsTable(readings) {
