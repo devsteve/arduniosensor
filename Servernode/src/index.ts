@@ -1,4 +1,5 @@
 import readHubData from './services/readHubData';
+import dataStore from './services/dataStore';
 import express = require('express')
 import path = require('path');
 import Config = require('../config/env');
@@ -6,6 +7,25 @@ import displayController from './controllers/displayController';
 //Start the IoT Hub routine
 readHubData.readData();
 
+const dataInterface = new dataStore();
+
+dataInterface.storeRecord({ temp: 1, humidity: 1});
+
+dataInterface.retrieveRecords(2,function(err, result) {
+    if (!err) {
+      console.log(result);
+    } else {
+      // error handling
+    };
+});
+
+dataInterface.retrieveLatestRecord(function(err, result) {
+    if (!err) {
+      console.log(result);
+    } else {
+      // error handling
+    };
+});
 
 // The port the express app will listen on
 const port: number = Config.env.port || 3030;

@@ -1,7 +1,6 @@
 
 const { EventHubClient, EventPosition } = require('@azure/event-hubs');
 
-
 import Config = require('../../config/env');
 
 
@@ -16,7 +15,7 @@ export default class readHubData {
   // - Telemetry is sent in the message body
   // - The device can add arbitrary application properties to the message
   // - IoT Hub adds system properties, such as Device Id, to the message.
-  private static _printMessage(message) {
+  private static _storeMessage(message) {
     console.log('Telemetry received: ');
     console.log(JSON.stringify(message.body));
     console.log('Application properties (set by device): ')
@@ -38,7 +37,7 @@ export default class readHubData {
     }).then(function (ids) {
       console.log("The partition ids are: ", ids);
       return ids.map(function (id) {
-        return ehClient.receive(id, readHubData._printMessage, readHubData._printError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
+        return ehClient.receive(id, readHubData._storeMessage, readHubData._printError, { eventPosition: EventPosition.fromEnqueuedTime(Date.now()) });
       });
     }).catch(readHubData._printError);
   }
