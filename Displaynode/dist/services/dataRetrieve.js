@@ -11,7 +11,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 const schema_1 = require("../schema/schema");
 const Config = require("../../config/env");
-class dataStore {
+class dataRetrieve {
     constructor() {
         console.log('Called');
     }
@@ -31,27 +31,20 @@ class dataStore {
             return this._schema;
         });
     }
-    /**
-     * Store generic data collection recordData in mongo db collection of Collectionname
-     * @param collectionName
-     * @param recordData
-     */
-    storeRecord(recordData) {
-        console.log('Saving');
-        console.log(recordData);
+    retrieveRecords(count, callback) {
         let recordModel = this._schema.get('record');
-        let created = new Date();
-        recordModel.create({
-            temp: recordData.temp,
-            humidity: recordData.humidity,
-            created: created,
-            timestamp: created.getTime()
-        }, function (err) {
-            if (err)
-                console.log('Error on save!');
-            console.log('Saved');
-        });
+        recordModel.find()
+            .limit(count)
+            .sort({ 'timestamp': -1 })
+            .exec(callback);
+    }
+    retrieveLatestRecord(callback) {
+        let recordModel = this._schema.get('record');
+        recordModel.find()
+            .limit(1)
+            .sort({ 'timestamp': -1 })
+            .exec(callback);
     }
 }
-exports.default = dataStore;
-//# sourceMappingURL=dataStore.js.map
+exports.default = dataRetrieve;
+//# sourceMappingURL=dataRetrieve.js.map

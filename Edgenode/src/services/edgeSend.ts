@@ -19,12 +19,11 @@ export default class edgeSend {
     // Create a message and send it to the IoT hub every second
     var client = Device.Client.fromConnectionString(Config.env.connectionString, Mqtt.Mqtt);
     // Simulate telemetry.
-    let temperature = 20 + (Math.random() * 15);
     let message = new Device.Message(JSON.stringify(dataObject));
 
     // Add a custom application property to the message.
     // An IoT hub can filter on these properties without access to the message body.
-    message.properties.add('temperatureAlert', (temperature > 30) ? 'true' : 'false');
+    message.properties.add('temperatureAlert', (dataObject.temp > 30) ? 'true' : 'false');
 
     console.log('Sending message: ' + message.getData());
 

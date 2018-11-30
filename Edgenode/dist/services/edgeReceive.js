@@ -13,20 +13,21 @@ class edgeReceive {
     /**
      * Start new receiver
      */
-    start(dataHandler) {
+    //start(dataHandler : IngressDataHandler) {
+    start(processDataString) {
         if (Config.dev) {
-            this.debug(dataHandler);
+            this.debug(processDataString);
         }
         else {
             const parser = this._port.pipe(new Readline({ delimiter: '\r\n' }));
-            parser.on('data', dataHandler.processDataString);
+            parser.on('data', processDataString);
         }
     }
     /**
      * Start new receiver
      */
-    debug(dataHandler) {
-        dataHandler.processDataString("humidity: 30, temp: 45");
+    debug(processDataString) {
+        processDataString("humidity: 32, temp: 47");
     }
 }
 exports.default = edgeReceive;
