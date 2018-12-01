@@ -8,5 +8,8 @@
     "express": "^4.16.4",
     "mongoose": "^5.3.14",
     "typescript": "^3.2.0-dev.20181107"
+  },
+  "scripts" : {
+      "start" : "node dist/index.js"
   }
 }

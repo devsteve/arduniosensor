@@ -6,7 +6,8 @@ import displayController from './controllers/displayController';
 
 
 // The port the express app will listen on
-const port: number = Config.env.port || 3030;
+const port = process.env.PORT || 8080;
+
 const app = express();
 
 
