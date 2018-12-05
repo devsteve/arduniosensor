@@ -7,9 +7,10 @@
     "@types/node": "^10.12.3",
     "express": "^4.16.4",
     "mongoose": "^5.3.14",
+    "recharts": "^1.4.1",
     "typescript": "^3.2.0-dev.20181107"
   },
-  "scripts" : {
-      "start" : "node dist/index.js"
+  "scripts": {
+    "start": "node dist/index.js"
   }
 }

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 // Require the serialport node module
 const edgeReceive_1 = require("./services/edgeReceive");
-const edgeSend_1 = require("./services/edgeSend");
-let sendInstance = new edgeSend_1.default();
-let receive = new edgeReceive_1.default();
+const dataStore_1 = require("./services/dataStore");
+const receive = new edgeReceive_1.default();
+const dataInterface = new dataStore_1.default();
 /*
 class dataHandler extends classDataHandler {
 
@@ -32,20 +32,34 @@ class dataHandler extends classDataHandler {
 }
 */
 let processDataString = function (dataString) {
-    let getValue = function (valueName, datastring, isInt = false) {
+    let regexBase = ":([0-9]*\.[0-9]*)";
+    let getIntValue = function (valueName, datastring) {
         //let regexString = valueName+this._regex;
-        let regexString = valueName + ":([0-9]*\.[0-9]*)";
+        let regexString = valueName + regexBase;
         let regex = new RegExp(regexString, "g");
         let found = regex.exec(datastring);
-        return found && found[1] ? (isInt ? parseInt(found[1]) : found[1]) : null;
+        return found && found[1] ? parseInt(found[1]) : null;
     };
+    let getStringValue = function (valueName, datastring) {
+        let regexString = valueName + regexBase;
+        let regex = new RegExp(regexString, "g");
+        let found = regex.exec(datastring);
+        return found && found[1] ? found[1] : null;
+    };
+    let temp = getIntValue('temp', dataString);
+    //Convert to scale at 22 degrees read temp it is 24
+    temp = temp !== null ? Math.floor(temp * (24 / 22)) : null;
     let dataObject = {
-        humidity: getValue('humidity', dataString, true),
-        temp: getValue('temp', dataString, true)
+        humidity: getIntValue('humidity', dataString),
+        temp: temp
     };
-    sendInstance.send(dataObject);
+    dataInterface.storeRecord(dataObject);
+    //Update Skip IoT Hub and send straight to DB
+    //sendInstance.send(dataObject);
     return false;
 };
-//Start receiving. Process will call send when data obtained
-receive.start(processDataString);
+dataInterface.connect().then(schema => {
+    //Start receiving. Process will call send when data obtained
+    receive.start(processDataString);
+});
 //# sourceMappingURL=index.js.map

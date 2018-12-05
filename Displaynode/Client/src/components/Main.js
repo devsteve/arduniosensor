@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import Moment from 'react-moment';
 
 export class Main extends Component {
   displayName = Main.name
@@ -8,24 +10,21 @@ export class Main extends Component {
     super(props);
     this.state = { readings: [], loading: true };
     let $this = this;
-    setInterval(() => { 
+    
+    //Todo dry this bit of repetition
+    let fetchit = () => { 
       fetch('api/all')
         .then(response => response.json())
         .then(data => {
           $this.setState({ readings: data, loading: false });
         });
-      },2000);
+      };
+    fetchit();
+    setInterval(() => fetchit,60000); //1 min
   }
 
   static renderReadingsTable(readings) {
     let latest = readings.shift();
-
-    let dateOptions = {
-      year: 'numeric', month: 'numeric', day: 'numeric',
-      hour: 'numeric', minute: 'numeric', second: 'numeric',
-      hour12: false,
-      timeZone: 'Australia/Melbourne'
-    };
 
     return (
       <container>
@@ -43,10 +42,19 @@ export class Main extends Component {
             <tr key={latest.temp}>
               <td>{latest.temp}</td>
               <td>{latest.humidity}</td>
-              <td>{latest.created}</td>
+              <Moment toNow unix>{(latest.timestamp/1000)}</Moment>
             </tr>
         </tbody>
       </table>
+
+      <LineChart width={600} height={300} data={readings}>
+        <Line type="monotone" dataKey="temp" stroke="#8884d8" />
+        <CartesianGrid stroke="#ccc" />
+        <XAxis />
+        <YAxis />
+        <Legend />
+        <Line type="monotone" dataKey="temp" stroke="#8884d8" activeDot={{r: 8}}/>
+      </LineChart>
         
       <h3>Recent</h3>
         <table className='table'>
@@ -62,7 +70,7 @@ export class Main extends Component {
               <tr key={reading.temp}>
                 <td>{reading.temp}</td>
                 <td>{reading.humidity}</td>
-                <td>{reading.created}</td>
+                <Moment parse="YYYY-MM-DD HH:mm" unix>{(reading.timestamp/1000)}</Moment>
               </tr>
             )}
           </tbody>
@@ -70,6 +78,12 @@ export class Main extends Component {
       </container>  
     );
   }
+
+  static renderReadingsGraph(readings) {
+
+    
+  } 
+
 
   render() {
     let contents = this.state.loading

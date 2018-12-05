@@ -1,15 +1,9 @@
 // Require the serialport node module
 import edgeReceive from './services/edgeReceive';
-import edgeSend from './services/edgeSend';
+import dataStore from './services/dataStore';
 
-
-import classDataHandler from './classes/ingressDataHandler';
-
-
-
-
-let sendInstance = new edgeSend();
-let receive = new edgeReceive();
+const receive = new edgeReceive();
+const dataInterface = new dataStore();
 
 /*
 class dataHandler extends classDataHandler {
@@ -37,26 +31,45 @@ class dataHandler extends classDataHandler {
   }
 }
 */
+
 let processDataString = function(dataString : string) {
-  let getValue = function(valueName,datastring,isInt = false) {
+  
+  let regexBase = ":([0-9]*\.[0-9]*)";
+
+  let getIntValue = function(valueName,datastring) : number {
     //let regexString = valueName+this._regex;
-    let regexString = valueName+":([0-9]*\.[0-9]*)";
+    let regexString = valueName+regexBase;
     let regex = new RegExp(regexString,"g");
     let found = regex.exec(datastring);
-    return found && found[1] ? (isInt ? parseInt(found[1]) : found[1]) : null;
+    return found && found[1] ? parseInt(found[1]) : null;
   }
 
+  let getStringValue = function(valueName,datastring) : string {
+    let regexString = valueName+regexBase;
+    let regex = new RegExp(regexString,"g");
+    let found = regex.exec(datastring);
+    return found && found[1] ? found[1] : null;
+  }
 
+  let temp = getIntValue('temp',dataString);
+  //Convert to scale at 22 degrees read temp it is 24
+  temp = temp !== null ? Math.floor(temp * (24/22)): null
+  
   let dataObject = {
-    humidity : getValue('humidity',dataString,true),
-    temp :  getValue('temp',dataString,true)
+    humidity : getIntValue('humidity',dataString),
+    temp : temp  
   };
 
-  sendInstance.send(dataObject);
+  
+  dataInterface.storeRecord(dataObject);
+  //Update Skip IoT Hub and send straight to DB
+  //sendInstance.send(dataObject);
 
   return false;
 }
 
+dataInterface.connect().then(schema => {  
 
-//Start receiving. Process will call send when data obtained
-receive.start(processDataString);
+  //Start receiving. Process will call send when data obtained
+  receive.start(processDataString);
+});
