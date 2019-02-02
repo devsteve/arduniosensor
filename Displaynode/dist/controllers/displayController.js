@@ -9,7 +9,7 @@ dataInterface.connect().then(schema => {
     // The / here corresponds to the route that the WelcomeController
     // is mounted on in the server.ts file.
     // In this case it's /welcome
-    router.get('/all', (req, res) => {
+    router.get('/latest', (req, res) => {
         // Reply with entire record
         res.setHeader('Content-Type', 'application/json');
         dataInterface.retrieveRecords(10, function (err, result) {
@@ -18,16 +18,38 @@ dataInterface.connect().then(schema => {
             }
             else {
                 // error handling
+                res.send(err);
             }
             ;
         });
-        //res.send(JSON.stringify([{ temp: "5", humidity: "10", time: "10:14" },{ temp: "5", humidity: "10", time: "10:14" }]));
     });
-    router.get('/:count', (req, res) => {
+    router.get('/count/:count/:segmentation', (req, res) => {
         //Number of records to return
-        const { count } = req.params;
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({ count: count }));
+        const { count, segmentation } = req.params;
+        dataInterface.retrieveRecords(parseInt(count), function (err, result) {
+            if (!err) {
+                var ret = [];
+                var count = 0;
+                //Split the array via the segmentation
+                if (segmentation && segmentation != 1 && segmentation > 0) {
+                    result.forEach(element => {
+                        if (count % segmentation === 0) {
+                            ret.push(element);
+                        }
+                        count++;
+                    });
+                }
+                else {
+                    ret = result;
+                }
+                res.send(ret);
+            }
+            else {
+                // error handling
+                res.send(err);
+            }
+            ;
+        });
     });
 });
 // Export the express.Router() instance to be used by server.ts

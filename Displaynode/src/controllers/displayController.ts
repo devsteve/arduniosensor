@@ -8,10 +8,10 @@ const dataInterface = new dataRetrieve();
 
 dataInterface.connect().then(schema => { 
 
-    // The / here corresponds to the route that the WelcomeController
+     // The / here corresponds to the route that the WelcomeController
     // is mounted on in the server.ts file.
     // In this case it's /welcome
-    router.get('/all', (req: Request, res: Response) => {
+    router.get('/latest', (req: Request, res: Response) => {
         // Reply with entire record
         res.setHeader('Content-Type', 'application/json');
 
@@ -20,19 +20,39 @@ dataInterface.connect().then(schema => {
             if (!err) {
                 res.send(result);
             } else {
-            // error handling
+                // error handling
+                res.send(err);    
             };
         });
-
-        //res.send(JSON.stringify([{ temp: "5", humidity: "10", time: "10:14" },{ temp: "5", humidity: "10", time: "10:14" }]));
     });
+    
 
-    router.get('/:count', (req: Request, res: Response) => {
+    router.get('/count/:count/:segmentation', (req: Request, res: Response) => {
         //Number of records to return
-        const { count } = req.params;
+        const { count, segmentation } = req.params;
 
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({ count: count }));
+        dataInterface.retrieveRecords(parseInt(count),function(err, result) {
+            
+            if (!err) {
+                var ret = [];
+                var count = 0;
+                //Split the array via the segmentation
+                if(segmentation && segmentation != 1 && segmentation > 0) {
+                    result.forEach(element => {
+                        if(count % segmentation === 0) {  
+                            ret.push(element); 
+                        }
+                        count++;
+                    });
+                } else {
+                    ret = result;
+                }
+                res.send(ret);
+            } else {
+                // error handling
+                res.send(err);
+            };
+        });
     });
 });
 
