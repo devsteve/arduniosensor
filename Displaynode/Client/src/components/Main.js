@@ -22,13 +22,14 @@ export class Main extends Component {
           $this.setState({ latest: data});
         });
 
-        fetch('api/count/96')
+        fetch('api/count/96/4')
           .then(response => response.json())
           .then(data => {
           $this.setState({ recent: data });
         });
 
-        fetch('api/count/1040')
+        //1440 min in a day, assume 5 min increments 288 a day
+        fetch('api/count/864/20')
           .then(response => response.json())
           .then(data => {
             $this.setState({ all: data, loading: false });

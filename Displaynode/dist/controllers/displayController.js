@@ -23,12 +23,26 @@ dataInterface.connect().then(schema => {
             ;
         });
     });
-    router.get('/count/:count', (req, res) => {
+    router.get('/count/:count/:segmentation', (req, res) => {
         //Number of records to return
-        const { count } = req.params;
+        const { count, segmentation } = req.params;
         dataInterface.retrieveRecords(parseInt(count), function (err, result) {
             if (!err) {
-                res.send(result);
+                var ret = [];
+                var count = 0;
+                //Split the array via the segmentation
+                if (segmentation && segmentation != 1 && segmentation > 0) {
+                    result.forEach(element => {
+                        if (count % segmentation === 0) {
+                            ret.push(element);
+                        }
+                        count++;
+                    });
+                }
+                else {
+                    ret = result;
+                }
+                res.send(ret);
             }
             else {
                 // error handling
