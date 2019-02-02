@@ -1,9 +1,6 @@
 const mongoose = require("mongoose"); 
 
 import Schema from '../schema/schema';
-import Config = require('../../config/env');
-
-
 
 export default class dataRetrieve { 
 
@@ -14,7 +11,7 @@ export default class dataRetrieve {
     }
 
     public async connect() {     
-       const uristring = 'mongodb://'+Config.env.mongodb;
+       const uristring = process.env.DISPLAY_MONGODB || '';
        await mongoose.connect(uristring, function (err, res) {
         if (err) {
         console.log ('ERROR connecting to: ' + uristring + '. ' + err);

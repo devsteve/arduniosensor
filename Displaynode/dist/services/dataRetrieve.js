@@ -10,14 +10,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose = require("mongoose");
 const schema_1 = require("../schema/schema");
-const Config = require("../../config/env");
 class dataRetrieve {
     constructor() {
         console.log('Called');
     }
     connect() {
         return __awaiter(this, void 0, void 0, function* () {
-            const uristring = 'mongodb://' + Config.env.mongodb;
+            const uristring = process.env.DISPLAY_MONGODB || '';
             yield mongoose.connect(uristring, function (err, res) {
                 if (err) {
                     console.log('ERROR connecting to: ' + uristring + '. ' + err);
