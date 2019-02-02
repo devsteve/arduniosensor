@@ -25,6 +25,7 @@ dataInterface.connect().then(schema => {
             };
         });
     });
+    
 
     router.get('/count/:count', (req: Request, res: Response) => {
         //Number of records to return
