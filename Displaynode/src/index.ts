@@ -1,6 +1,5 @@
 import express = require('express')
 import path = require('path');
-import Config = require('../config/env');
 import displayController from './controllers/displayController';
 
 
