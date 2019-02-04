@@ -1,11 +1,12 @@
 import express = require('express')
 import path = require('path');
 import displayController from './controllers/displayController';
+import { config } from 'dotenv';
 
 
 
 // The port the express app will listen on
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || process.env.port || 1337;
 
 const app = express();
 

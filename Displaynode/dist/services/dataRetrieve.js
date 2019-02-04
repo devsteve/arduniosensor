@@ -16,6 +16,7 @@ class dataRetrieve {
     }
     connect() {
         return __awaiter(this, void 0, void 0, function* () {
+            console.log(process.env);
             const uristring = process.env.DISPLAY_MONGODB || '';
             yield mongoose.connect(uristring, function (err, res) {
                 if (err) {

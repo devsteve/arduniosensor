@@ -4,7 +4,7 @@ const express = require("express");
 const path = require("path");
 const displayController_1 = require("./controllers/displayController");
 // The port the express app will listen on
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || process.env.port || 1337;
 const app = express();
 console.log(path.join(__dirname, '../Client/build'));
 app.use(express.static(path.join(__dirname, '../Client/build')));

@@ -1,3 +1,4 @@
+import { config } from 'dotenv';
 const mongoose = require("mongoose"); 
 
 import Schema from '../schema/schema';
@@ -10,7 +11,8 @@ export default class dataRetrieve {
         console.log('Called');
     }
 
-    public async connect() {     
+    public async connect() {   
+      console.log(process.env);  
        const uristring = process.env.DISPLAY_MONGODB || '';
        await mongoose.connect(uristring, function (err, res) {
         if (err) {
